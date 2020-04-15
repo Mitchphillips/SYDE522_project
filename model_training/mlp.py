@@ -11,6 +11,7 @@ from sklearn import tree, preprocessing
 from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.model_selection import train_test_split, StratifiedShuffleSplit, GridSearchCV
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.neural_network import MLPClassifier
 from shutil import copyfile
 
 # load train data
@@ -51,13 +52,35 @@ print('\n')
 print('Training labels: \n',y_train)
 
 # K Nearest Neighbors Classifier (has to be able to deal with floats)
-KNN = KNeighborsClassifier(5)
+
+MLP = MLPClassifier(hidden_layer_sizes = (50,5),
+                    activation='logistic', 
+                    solver='lbfgs', 
+                    alpha=0.0001, 
+                    batch_size='auto', 
+                    learning_rate='invscaling', 
+                    learning_rate_init=0.001, 
+                    power_t=0.5, 
+                    max_iter=40000, 
+                    shuffle=True, 
+                    random_state=None, 
+                    tol=0.0001, 
+                    verbose=False, 
+                    warm_start=False, 
+                    momentum=0.9, 
+                    nesterovs_momentum=True, 
+                    early_stopping=False, 
+                    validation_fraction=0.1, 
+                    beta_1=0.9, 
+                    beta_2=0.999, 
+                    epsilon=1e-08, 
+                    n_iter_no_change=10)
 
 # fit the classifier using the training data
-KNN = KNN.fit(X_train, y_train)
+MLP = MLP.fit(X_train, y_train)
 
 # Predict the test class labels using the trained KNN classifier 
-y_pred = KNN.predict(X_test)
+y_pred = MLP.predict(X_test)
 
 # print accuracy of the classifier
 print(classification_report(y_test, y_pred))
