@@ -14,7 +14,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from shutil import copyfile
 
 # load train data
-train_data = pd.read_csv('../data/MoreManipulatedData.csv',usecols=lambda x: 'PLAYER_URL' not in x)
+train_data = pd.read_csv('../data/MoreManipulatedData_bucket_last_col.csv',usecols=lambda x: 'PLAYER_URL' not in x)
 
 # different classes
 train_data.BUCKET.unique()
@@ -51,7 +51,7 @@ print('\n')
 print('Training labels: \n',y_train)
 
 # Decision Tree Classifier (has to be able to deal with floats)
-DT = tree.DecisionTreeClassifier()
+DT = KNeighborsClassifier(5)
 
 # fit the classifier using the training data
 DT = DT.fit(X_train, y_train)
