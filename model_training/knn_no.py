@@ -8,7 +8,7 @@ import itertools
 
 from sklearn.datasets import load_iris
 from sklearn import tree, preprocessing
-from sklearn.metrics import classification_report, confusion_matrix
+from sklearn.metrics import classification_report, confusion_matrix,f1_score
 from sklearn.model_selection import train_test_split, StratifiedShuffleSplit, GridSearchCV
 from sklearn.neighbors import KNeighborsClassifier
 from shutil import copyfile
@@ -50,14 +50,47 @@ print('Training data: \n',X)
 print('\n')
 print('Training labels: \n',y_train)
 
-# K Nearest Neighbors Classifier (has to be able to deal with floats)
-KNN = KNeighborsClassifier(5)
+ks = []
+f1s_micro = []
+f1s_macro = []
+f1s_weighted = []
 
-# fit the classifier using the training data
-KNN = KNN.fit(X_train, y_train)
+K = 2
+while K < 100:
+	print(K)
+	# K Nearest Neighbors Classifier (has to be able to deal with floats)
+	KNN = KNeighborsClassifier(K)
 
-# Predict the test class labels using the trained KNN classifier 
-y_pred = KNN.predict(X_test)
+	# fit the classifier using the training data
+	KNN = KNN.fit(X_train, y_train)
 
-# print accuracy of the classifier
-print(classification_report(y_test, y_pred))
+	# Predict the test class labels using the trained KNN classifier 
+	y_pred = KNN.predict(X_test)
+
+
+	ks.append(K)
+	f1s_macro.append(f1_score(y_test, y_pred,average='macro'))
+	f1s_micro.append(f1_score(y_test, y_pred,average='micro'))
+	f1s_weighted.append(f1_score(y_test, y_pred,average='weighted'))
+
+	# print accuracy of the classifier
+	# print(classification_report(y_test, y_pred))
+
+	K = K + 1
+
+fig, axes = plt.subplots(1, 1)
+
+axes.plot(ks,f1s_micro)
+axes.plot(ks,f1s_macro)
+axes.plot(ks,f1s_weighted)
+labels = ["Micro average","Macro average","Weighted average"]
+axes.legend(axes.get_lines(), labels, loc=7)
+plt.ylabel('Accuracy')
+plt.xlabel('Value of K')
+plt.title('Effect of K on accuracy')
+plt.show()
+
+
+
+
+
